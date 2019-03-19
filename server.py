@@ -12,9 +12,27 @@ def update_lux():
     time = request.form["time"]
     lux = request.form["lux"]
     try:
-        f = open(file_path, 'w')
-        f.write(time + "," + lux)
-        return "suceeded to write"
+        #追記モードに変更
+        f = open(file_path, 'a')
+        f.write(time + "," + lux + '\n')
+
+        #100行越えたら新しく更新して1行目から書き込む
+
+        f2 = open(file_path, 'r')
+        list2 = []
+        for row in f2:
+            list2.append(row)
+        #f.write('aaa')
+        if sum(1 for line in open(file_path)) >= 5 :
+            f3 = open(file_path, 'w')
+            f4 = open(file_path, 'a')
+
+            for row in list2[-6:] :
+                f3.write(row)
+            
+            f4.write(time + "," + lux + '\n')  
+          
+        return "suceeded to write" 
     except Exception as e:
         print(e)
         return "failed to write"
@@ -23,11 +41,14 @@ def update_lux():
 
 @app.route('/lux', methods = ['Get'])
 def get_lux():
-    try:
+    try: #描画するデータを送信
         f = open(file_path, 'r')
+        list = []
         for row in f:
-            lux = row
-        return lux
+            list.append(row)
+            #lux = row
+        lux = ','.join(list[-7:])
+        return  lux
     except Exception as e:
             print(e)
             return e
