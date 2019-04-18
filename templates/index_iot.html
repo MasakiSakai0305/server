@@ -7,25 +7,14 @@
 
         <script>
         const updateLux = async(url, element) => {
+
             var sensorData = await fetch(url).then(response => response.text())
             const target = document.getElementById(element)
             //target.innerHTML = `<h1>${sensorData}</h1>`
-            
-            var date = [], sensor = [];
-            
-            /*
-            for (var i=0; i<14; i++){
-                if (i % 2  == 0 )
-                    date.push(sensorData.split(',')[i])
-                else
-                    sensor.push(sensorData.split(',')[i])
-            }*/
 
-            const is_exist = sensorData.split(',')[1];
             
-
-            //const is_exist=1  //人がいると1、いないと0
-                
+            const is_exist = sensorData.split(',')[1];  //人がいると1、いないと0を含んだ文字列が返ってくる
+ 
             //いないときバツ印を消し、マルを表示
             if (is_exist.match(/^0/)){
                 $(function(){ 
@@ -42,13 +31,16 @@
                 });
             }
         }
-        //３秒ごとに更新する部分
-        //setInterval("updateLux('/lux', 'data')", 3000)
-        
-        //var x = '2019/04/24 22:47:25 700'.split(' ')
+
+        //ページ更新
+        function reload(){
+            location.reload();
+        }
 
         </script>
 
+
+        <!-- CSSでマルとバツを表示 -->
         <style>
 
             .circle{
@@ -107,8 +99,11 @@
 
     </head>
     <center>
-    <body onLoad = "get_html()">
-        <input type = "button" value = "更新" onclick = "get_html()">
+    <body onLoad = "updateLux('/lux', 'data')">
+        <input type = "button" value = "更新" onclick = "reload()";
+
+        ">
+        <div id = "data"></div>
         <div class="circle" href="~" left:130px>
             <font size="5"><p class="ok"></p></font>
         </div>
