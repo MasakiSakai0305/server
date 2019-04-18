@@ -16,7 +16,7 @@ my_port = 16046
 # 1.display.html表示
 @app.route('/', methods=['GET'])
 def get_html():
-  return render_template('./display.html')
+  return render_template('./index_iot.html')
 
 
 # 2.csvにセンサデータを書き込む
