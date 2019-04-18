@@ -32,7 +32,7 @@ def update_lux():
     print(e)
     return "failed to write"
   finally:
-f.close()
+    f.close()
 
 
 # 3.csvのデータを返す
@@ -47,7 +47,7 @@ def get_lux():
     print(e)
     return e
   finally:
-f.close()
+    f.close()
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=my_port)
