@@ -1,0 +1,86 @@
+<title>テストアプリ</title>
+<html>
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.bundle.js"></script>
+        <canvas id="myChart1" width="400" height="250"></canvas>
+
+        <script>
+        //var xxx 
+        const updateLux = async(url, element) => {
+            var sensorData = await fetch(url).then(response => response.text())
+            const target = document.getElementById(element)
+            target.innerHTML = `<h1>${sensorData}</h1>`
+            
+            var date = [], sensor = [];
+            for (var i=0; i<14; i++){
+                if (i % 2  ==0 )
+                    date.push(sensorData.split(',')[i])
+                else
+                    sensor.push(sensorData.split(',')[i])
+            }
+                
+            //グラフ
+            var ctx = document.getElementById("myChart1");
+            var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: [date[0], date[1], date[2], date[3], date[4], date[5], date[6]],
+                datasets: [{
+                    label: '照度値',
+                    data: [sensor[0], sensor[1], sensor[2], sensor[3], sensor[4], sensor[5], sensor[6]],
+                    backgroundColor:  'rgba(255, 99, 132, 0.2)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+            });
+
+        /* ３秒ごとに更新する部分
+        setInterval("updateLux('/lux', 'data')", 3000)
+        */
+        var x = '2019/04/24 22:47:25 700'.split(' ')
+
+        //document.write(xxx[0])
+        /*
+        var ctx = document.getElementById("myChart1");
+        var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ["1月", "2月", "3月", "4月", "5月", "6月"],
+            datasets: [{
+                label: '照度値',
+                data: [35000, 39500, 103400, 115000, 132851, 183183],
+                backgroundColor:  'rgba(255, 99, 132, 0.2)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+    */
+        }
+
+        </script>
+    </head>
+    <center>
+    <body onLoad = "updateLux('/lux', 'data')">
+        <div id = "data">test</div>
+        <input type = "button" value = "更新" onclick = "updateLux('/lux', 'data')">
+    </body>
+    </center>
+</html>

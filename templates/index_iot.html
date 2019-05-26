@@ -1,0 +1,115 @@
+<title>人感センサ値表示</title>
+<html>
+    <head>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.bundle.js"></script>
+
+        <script>
+        const updateLux = async(url, element) => {
+
+            var sensorData = await fetch(url).then(response => response.text())
+            const target = document.getElementById(element)
+            //target.innerHTML = `<h1>${sensorData}</h1>`
+
+            
+            const is_exist = sensorData.split(',')[1];  //人がいると1、いないと0を含んだ文字列が返ってくる
+ 
+            //いないときバツ印を消し、マルを表示
+            if (is_exist.match(/^0/)){
+                $(function(){ 
+                $('div').removeClass("my-parts");
+                $('p.no').remove();
+                });
+            }
+
+            // いるときはマル印を消し、バツを表示
+            else if (is_exist.match(/^1/)){
+                $(function(){ 
+                $('div').removeClass("circle");
+                $('p.ok').remove();
+                });
+            }
+        }
+
+        //ページ更新
+        function reload(){
+            location.reload();
+        }
+
+        </script>
+
+
+        <!-- CSSでマルとバツを表示 -->
+        <style>
+
+            .circle{
+                display: inline-block;
+                width: 200px;
+                height: 200px;
+                text-align:left;
+                line-height: 80px;
+                vertical-align: top;
+                border-radius: 50%;
+                border: solid 8px skyblue;
+                position: absolute; top:10; left:50;
+            }
+                p:before {
+                    content: "現在空いてます";    
+                    position: absolute; top:200; left:30;
+                }
+                
+            .my-parts {
+                display: inline-block;
+                width: 250px;
+                height: 250px;
+                position: absolute;
+                top:10;
+                left:50;
+    
+                border: 1px solid rgba(0,0,0,.1);
+                cursor: pointer;
+            }
+                .my-parts span::before,
+                .my-parts span::after {
+                display: block;
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 84%;
+                height: 16%;
+                margin: -8% 0 0 -42%;
+                background: #E91E63;
+                }
+                .my-parts span::before {
+                transform: rotate(-45deg);
+                }
+                .my-parts span::after {
+                transform: rotate(45deg);
+                }
+                .my-parts p:before{
+                    content:"現在空いていません";
+                    position: absolute; top:250; left:0;
+                }
+                
+        </style>
+
+
+
+    </head>
+    <center>
+    <body onLoad = "updateLux('/lux', 'data')">
+        <input type = "button" value = "更新" onclick = "reload()";
+
+        ">
+        <div id = "data"></div>
+        <div class="circle" href="~" left:130px>
+            <font size="5"><p class="ok"></p></font>
+        </div>
+        <div class="my-parts"><span></span>
+            <font size="5"><p class="no"></p></font>
+        </div>
+    </body>
+    </center>
+</html>
